@@ -1,243 +1,496 @@
 <template>
 	<div class="layout">
 		<Layout>
-			<Header :style="{position: 'fixed', width: '100%'}">
-				<Menu mode="horizontal" theme="dark" active-name="1">
-					<div class="layout-logo"></div>
+			<Header :style="{width: '100%'}">
+				<Menu mode="horizontal" theme="dark">
+					<router-link :to="{ name: 'main'}">
+						<div class="layout-logo" style='font-size:16px;color:white;line-height:30px;font-family: 华文琥珀;'>
+							&nbsp;LC电脑商城
+						</div>
+					</router-link>
 					<div class="layout-nav">
-						<MenuItem name="1">
-						<Icon type="ios-navigate"></Icon>
-						Item 1
+						<MenuItem name="1" :title='currentUser.userNickname'>
+						<span @click="judge" type="primary">
+							<Icon type="logo-octocat" />
+							{{showUserName}}
+						</span>
 						</MenuItem>
+
 						<MenuItem name="2">
-						<Icon type="ios-keypad"></Icon>
-						Item 2
+						<Icon type="ios-cart" />
+						我的购物车
 						</MenuItem>
 						<MenuItem name="3">
-						<Icon type="ios-analytics"></Icon>
-						Item 3
-						</MenuItem>
-						<MenuItem name="4">
-						<Icon type="ios-paper"></Icon>
-						Item 4
+						<Icon type="md-paper" />
+						我的订单
 						</MenuItem>
 					</div>
 				</Menu>
 			</Header>
-			<Content :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
-				<!--导航栏-->
-				<Row style="margin:10px;font-size:22px;font-family: 'microsoft yahei';">
-					<Col span="24">
-					<Breadcrumb>
-						<BreadcrumbItem to="/">全部结果 > :</BreadcrumbItem>
-						<BreadcrumbItem to="/">戴尔</BreadcrumbItem>
-						<BreadcrumbItem>笔记本</BreadcrumbItem>
-					</Breadcrumb>
-					</Col>
-				</Row>
-
-				<!-- 品牌展示 -->
-				<Row style="border: 1px solid lightgray;border-right:none;margin-bottom: 3px;">
-					<Col span="2" style="line-height:40px;background-color:WhiteSmoke;height:110px;border-right:1px solid lightgray;
-					font-size: 16px; font-weight: bold; color: rgb(70, 76, 91);">&emsp;品牌:</Col>
-					<Col span="20">
-					<Button style="" v-for="n in brands" type="default" ghost :key="n.brandId" :id="n.brandId">
-						<img style="width:102px;height:36px;" :src="url + n.brandImage" />
-					</Button>
-					</Col>
-					<Col span="2">
-					</Col>
-				</Row>
-
-				<!-- 类型展示 -->
-				<Row style="border: 1px solid lightgray;border-right:none;margin-bottom: 3px;">
-					<Col span="2" style="background-color:WhiteSmoke;line-height:40px;border-right:1px solid lightgray;
-					font-size: 16px; font-weight: bold; color: rgb(70, 76, 91);">&emsp;电脑整机:</Col>
-					<Col span="20" style="line-height:40px;"> &emsp;
-					<RadioGroup v-model="thisType">
-						<Radio label="0">
-							<span>全部</span>
-						</Radio>
-						<Radio :label="n.typeId" v-for="n in types" :key="n.typeId">
-							<span>{{n.typeName}}</span>
-						</Radio>
-					</RadioGroup>
-					</Col>
-					<Col span="2">
-					</Col>
-				</Row>
-
-				<!-- 电脑处理器 -->
-				<Row style="border: 1px solid lightgray;border-right:none;margin-bottom: 3px;">
-					<Col span="2" style="background-color:WhiteSmoke;line-height:40px;border-right:1px solid lightgray;
-					font-size: 16px; font-weight: bold; color: rgb(70, 76, 91);">&emsp;其它选项:</Col>
-
-					<!-- 处理器 -->
-					<Col span="3" style="line-height: 40px;">
-					<Select v-model="thisProcessor" filterable style="margin-left: 5px;" placeholder="请选择处理器">
-						<Option v-for="item in processors" :value="item.processorId" :key="item.processorId">{{ item.processorName }}</Option>
-					</Select>
-					</Col>
-
-					<!-- 电脑内存容量 -->
-					<Col span="3" style="line-height: 40px;margin-left:10px;">
-					<Select v-model="thisMemoryCapacity" filterable style="margin-left: 5px;" placeholder="请选择内存容量">
-						<Option v-for="item in memory_capacity" :value="item.memoryCapacityId" :key="item.memoryCapacityId">{{ item.memoryCapacityName }}</Option>
-					</Select>
-					</Col>
-
-					<!-- 电脑硬盘容量 -->
-					<Col span="3" style="line-height: 40px;margin-left:10px;">
-					<Select v-model="thisHardDisk" filterable style="margin-left: 5px;" placeholder="请选择硬盘容量">
-						<Option v-for="item in hard_disk" :value="item.hardDiskId" :key="item.hardDiskId">{{ item.hardDiskName }}</Option>
-					</Select>
-					</Col>
-
-					<!-- 电脑系统 -->
-					<Col span="3" style="line-height: 40px;margin-left:10px;">
-					<Select v-model="thisComputerSystem" filterable style="margin-left: 5px;" placeholder="请选择电脑系统">
-						<Option v-for="item in computer_system" :value="item.computerSystemId" :key="item.computerSystemId">{{ item.computerSystemName }}</Option>
-					</Select>
-					</Col>
-					
-					
-					<!-- 电脑尺寸 -->
-					<Col span="3" style="line-height: 40px;margin-left:10px;">
-					<Select v-model="thisDimension" filterable style="margin-left: 5px;" placeholder="请选择电脑尺寸">
-						<Option v-for="item in dimensions" :value="item.dimensionId" :key="item.dimensionId">{{ item.dimensionName }}</Option>
-					</Select>
-					</Col>
-
-					<!-- 电脑显卡 -->
-					<Col span="3" style="line-height: 40px;margin-left:10px;">
-					<Select v-model="thisNvdia" filterable style="margin-left: 5px;" placeholder="请选择电脑显卡">
-						<Option v-for="item in nvdias" :value="item.nvdiaId" :key="item.nvdiaId">{{ item.nvdiaName }}</Option>
-					</Select>
-					</Col>
-
-				</Row>
-
+			<Content :style="{margin: '0px 20px 0', background: '#fff', minHeight: '500px'}">
+				<!-- 主体内容 -->
+				<router-view></router-view>
 			</Content>
+
+			<!-- 底部 -->
 			<Footer class="layout-footer-center">2018-10-28 &copy; lover-lc</Footer>
+
+			<!-- 右侧登入抽屉 -->
+			<Drawer title="LC电脑商城" width="320" :mask-closable="false" v-model="login">
+				<!-- 用户头像 -->
+				<Row style='margin-bottom:20px;'>
+					<Col span="10">&emsp;</Col>
+					<Col span="10">
+					<Avatar style='width:60px;height:60px;' :src="headPortrait" />
+					</Col>
+				</Row>
+
+				<!-- 登入操作 -->
+				<Row>
+					<Col span="6">&emsp;
+					</Col>
+					<Col span="14">
+					<Form inline>
+						<FormItem prop="user">
+							<Poptip trigger="hover" placement="bottom" title="温馨提示" content="只允许输入6-12位数字或字母">
+								<Input style='width:180px;line-height: 26px;' type="text" v-model="loginUser.userName" placeholder="请输入账号">
+								<Icon type="ios-person-outline" slot="prepend"></Icon>
+								</Input>
+							</Poptip>
+						</FormItem>
+						<FormItem prop="password">
+							<Poptip trigger="hover" placement="bottom" title="温馨提示" content="只允许输入6-12位数字、字母或空格及英文句号">
+								<Input style='width:180px;line-height: 26px;' type="password" v-model="loginUser.userPassword" placeholder="请输入密码">
+								<Icon type="ios-lock-outline" slot="prepend"></Icon>
+								</Input>
+							</Poptip>
+						</FormItem>
+						<FormItem>
+							<Button style='margin-left:20px;' type="primary" @click='loginValidator()'>登入</Button>&emsp;
+							<Button @click="register = true , login = false" type="default">注册</Button>
+						</FormItem>
+					</Form>
+					</Col>
+				</Row>
+			</Drawer>
+
+			<!-- 右侧注册抽屉 -->
+			<Drawer width='450' title="LC电脑商城" :mask-closable="false" v-model="register">
+
+				<!-- 注册字段：账号、密码、昵称、头像 -->
+				<p>
+					<h2 style='color:green;'>用户注册</h2>
+				</p>
+
+				<!-- 用户头像 -->
+				<Row style='margin-bottom:20px;margin-top:20px;'>
+					<Col span="9">&emsp;</Col>
+					<Col span="10">
+					<Avatar style='width:60px;height:60px;' :src="headPortrait" />
+					</Col>
+				</Row>
+
+				<Row>
+					<Col span="2">&emsp;</Col>
+					<Col span='15' style="">
+					<Form :label-width="70">
+						<FormItem label="昵称:">
+							<Input type="text" v-model="reg.userNickname"></Input>
+						</FormItem>
+						<FormItem label="账号:">
+							<Input type="text" v-model="reg.userAccountNumber"></Input>
+						</FormItem>
+						<FormItem label="密码:">
+							<Input type="password" v-model="reg.userPassword"></Input>
+						</FormItem>
+						<FormItem label="确认密码:">
+							<Input type="password" v-model="reg.userPassword2"></Input>
+						</FormItem>
+						<FormItem>
+							<Button style='margin-left:25px;' type="primary" @click="handleSubmit">注册</Button>
+							<Button style='margin-left:25px;' @click="register = false">取消</Button>
+						</FormItem>
+					</Form>
+					</Col>
+				</Row>
+			</Drawer>
+
+			<!-- 当前用户信息修改左侧抽屉 -->
+			<Drawer title="个人信息" placement="left" width='360' :mask-closable="false" v-model="informationDisplay">
+
+				<!-- 用户头像 -->
+				<Row style='margin-bottom:20px;'>
+					<Col span="5">&emsp;</Col>
+					<Col span="10">
+					<Avatar style='width:120px;height:120px;' :src="currentUser.userHeadPortrait" />
+					</Col>
+				</Row>
+
+				<!-- 信息展示 -->
+				<Row>
+					<Col span="4">&emsp;</Col>
+					<Col span='16'>
+					<p>&emsp;&emsp;昵称：{{currentUser.userNickname}}</p><br />
+					<p>&emsp;&emsp;账号：{{currentUser.userAccountNumber}}</p><br />
+					<p>&emsp;&emsp;密码：{{currentUser.userPassword}}</p><br />
+					<p>&emsp;&emsp;状态：{{currentUser.userState}}</p><br />
+					<p>创建时间：{{currentUser.userCreateTime}}</p><br />
+					</Col>
+				</Row>
+
+				<!-- 注销、信息修改 -->
+				<Row style='margin-top:10px;'>
+					<Col span="4">&emsp;</Col>
+					<Col span="16">
+					<ButtonGroup>
+						<Button @click="Logout">注销登入</Button>
+						<Button @click="updateCurrentUser = true ,informationDisplay = false">信息修改</Button>
+					</ButtonGroup>
+					</Col>
+				</Row>
+			</Drawer>
+
+			<!-- 当前用户信息修改 -->
+			<Drawer title="个人信息修改" placement="left" width='400' :closable="false" v-model="updateCurrentUser">
+
+				<!-- 用户头像 -->
+				<Row style='margin-top:20px;margin-left: 45px;'>
+					<Col span="6">&emsp;</Col>
+					<Col span="10">
+					<!-- 头像展示 -->
+					<Avatar style='width:120px;height:120px;margin-bottom: 15px;' :src="url + upd.userHeadPortrait" />
+					<!-- 头像上传 -->
+					<Upload name='file' :show-upload-list='false' :on-success="uploadSuccess" action="http://localhost:8888/upload/headerPortrait">
+						&nbsp;&nbsp;<Button icon="ios-cloud-upload-outline">头像上传</Button>
+					</Upload>
+					</Col>
+				</Row>
+
+				<!-- 密码、昵称修改 -->
+				<Row style='margin-top:10px;'>
+					<Col span="2">&emsp;</Col>
+					<Col span='16' style="">
+					<Form :label-width="70">
+						<FormItem label="账号:">
+							<Input type="text" readonly="readonly" v-model="upd.userAccountNumber"></Input>
+						</FormItem>
+						<FormItem label="昵称:">
+							<Input type="text" v-model="upd.userNickname"></Input>
+						</FormItem>
+						<FormItem label="密码:">
+							<Input type="password" placeholder="请输入密码" v-model="upd.userPassword"></Input>
+						</FormItem>
+						<FormItem label="确认密码:">
+							<Input type="password" placeholder="请输入密码" v-model="upd.userPassword2"></Input>
+						</FormItem>
+						<FormItem>
+							<Button style='margin-left:15px;' type="primary" @click="updCurrentInfo">更新</Button>
+							<Button style='margin-left:25px;' @click="updateCurrentUser = false">取消</Button>
+						</FormItem>
+					</Form>
+					</Col>
+				</Row>
+			</Drawer>
+
 		</Layout>
 	</div>
 </template>
 
 <script>
+	import mainHtml from './main.vue'
+
 	export default {
 		data() {
 			return {
-				brands: [], //品牌数据
-				types: [], //类型数据
-				processors: [], //处理器数据
-				memory_capacity: [], //内存容量
-				hard_disk: [], //硬盘容量
-				computer_system:[], //电脑系统
-				dimensions:[], //电脑尺寸
-				nvdias:[],  //电脑显卡
-				thisType: '0', //当前选中类型
-				thisProcessor: '0', //当前选中处理器
-				thisMemoryCapacity: '0', //当前选中的电脑内存容量
-				thisHardDisk:'0',//当前选中的电脑硬盘容量
-				thisComputerSystem:'0', //当前选中的电脑系统
-				thisDimension:'0', //当前选中的电脑尺寸
-				thisNvdia:'0', //当前选中的显卡
-				url: "http://localhost:8888"
+				upd: { //修改信息的对象
+					userAccountNumber: '',
+					userNickname: '',
+					userPassword: '',
+					userPassword2: '',
+					userHeadPortrait: '/images/head_portrait/599a521472424.jpg'
+				},
+				showUserName: '请登入...',
+				login: false, //登入抽屉
+				register: false, //注册抽屉
+				informationDisplay: false, //信息展示抽屉
+				questionBox: false, //提问框
+				updateCurrentUser: false, //个人信息修改
+				loginUser: {
+					userName: '',
+					userPassword: ''
+				},
+				headPortrait: 'http://localhost:8888/images/head_portrait/599a521472424.jpg',
+				url: 'http://localhost:8888',
+				already_login: false, //是否登入标志
+				reg: { //注册信息
+					userAccountNumber: '',
+					userPassword: '',
+					userPassword2: '',
+					userNickname: ''
+				},
+				currentUser: {
+					userAccountNumber: '',
+					userPassword: '********',
+					userNickname: '',
+					userState: '',
+					userCreateTime: '',
+					userHeadPortrait: ''
+				}
+
 			};
 		},
+		watch: {
+			upd: function(res) {
+				console.log(this.upd.userPassword);
+			}
+		},
 		methods: {
+			uploadSuccess(res, file) { //上传图片成功事件
+				if (res.code === 1224) { //上传成功
+					this.successTips(res.message);
+					this.upd.userHeadPortrait = res.data;
+				} else { //上传失败
+					this.errorTips(res.message);
+				}
+			},
+			updCurrentInfo() {
+				const own = this;
+				//昵称验证
+				if (/^[0-9a-zA-z\u4e00-\u9fa5]{1,10}$/.test(this.upd.userNickname) === false) {
+					this.errorTips('昵称格式错误，请输入1-10位文字、字母或数字!');
+					return false;
+				}
 
-		},
-		components: {
-
-		},
-		created() {
-			var own = this; //保存当前对象
-
-			//品牌数据请求
-			axios.get(own.url + '/brand', {
-					params: {}
-				}).then(function(respon) {
-					own.brands = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-
-			//类型数据请求
-			axios.get(own.url + '/type', {
-					params: {}
-				}).then(function(respon) {
-					own.types = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-
-			//处理器数据请求
-			axios.get(own.url + '/processor', {
-					params: {}
-				}).then(function(respon) {
-					own.processors = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-
-			//内存容量数据请求
-			axios.get(own.url + '/memoryCapacity', {
-					params: {}
-				}).then(function(respon) {
-					own.memory_capacity = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
+				//密码验证
+				if (/^[0-9a-zA-z. ]{6,16}$/.test(this.upd.userPassword) === false) {
+					this.errorTips('密码格式错误!请6-16位数字、字母或空格及英文句号!');
+					return false;
+				} else {
+					if (!(this.upd.userPassword === this.upd.userPassword2)) { //两次密码输入不一致
+						this.errorTips('两次密码输入不一致!');
+						return false;
+					}
+				}
 
 
-			//硬盘容量数据请求
-			axios.get(own.url + '/hardDisk', {
-					params: {}
-				}).then(function(respon) {
-					own.hard_disk = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-				
+				//数据
+				let data = JSON.stringify({
+					userNickname: own.upd.userNickname,
+					userPassword: own.upd.userPassword,
+					userHeadPortrait: own.upd.userHeadPortrait
+				});
 
-			//电脑系统数据请求
-			axios.get(own.url + '/computerSystem', {
-					params: {}
-				}).then(function(respon) {
-					own.computer_system = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-				
-				
-			//电脑尺寸数据请求
-			axios.get(own.url + '/dimension', {
-					params: {}
-				}).then(function(respon) {
-					own.dimensions = respon.data;
-				})
-				.catch(function(error) {
-					console.log(error);
-				})
-				
-					
-				//电脑显卡数据请求
-				axios.get(own.url + '/nvdia', {
-						params: {}
-					}).then(function(respon) {
-						own.nvdias = respon.data;
+				axios.put(own.url + '/user', data, {
+						headers: {
+							'Content-Type': 'application/json;charset=utf-8'
+						}
+					})
+					.then(function(response) {
+						if (response.data.code === 1224) {
+							own.successTips(response.data.message); //消息提示
+							own.updateCurrentUser = false; //关闭抽屉
+							own.currentUserBinding(response.data.data); //数据更新
+						} else {
+							own.errorTips(response.message);
+						}
 					})
 					.catch(function(error) {
 						console.log(error);
 					})
 
+			},
+			handleSubmit() { //注册用户
+				const own = this;
+				//昵称验证
+				if (/^[0-9a-zA-z\u4e00-\u9fa5]{1,10}$/.test(this.reg.userNickname) === false) {
+					this.errorTips('昵称格式错误，请输入1-10位文字、字母或数字!');
+					return false;
+				}
+
+				//注册用户名验证
+				if (/^[0-9a-zA-z]{6,16}$/.test(this.reg.userAccountNumber) === false) {
+					this.errorTips('账号格式错误！请输入6-16位数字或字母！');
+					return false;
+				}
+
+				//注册密码验证
+				if (/^[0-9a-zA-z. ]{6,16}$/.test(this.reg.userPassword) === false) {
+					this.errorTips('密码格式错误!请6-16位数字、字母或空格及英文句号!');
+					return false;
+				} else {
+					if (!(this.reg.userPassword === this.reg.userPassword2)) { //两次密码输入不一致
+						this.errorTips('两次密码输入不一致!');
+						return false;
+					}
+				}
+
+				let data = JSON.stringify({
+					userAccountNumber: own.reg.userAccountNumber,
+					userPassword: own.reg.userPassword,
+					userNickname: own.reg.userNickname
+				});
+
+				axios.post(this.url + '/user', data, {
+						headers: {
+							"Content-Type": "application/json;charset=utf-8"
+						}
+					})
+					.then(function(response) {
+						//注册成功
+						if (response.data.code == 1224) {
+							own.successTips(response.data.message); //成功弹框
+							own.showUserName = response.data.data.userNickname.substring(0, 5) + '...'; //用户名显示
+							own.already_login = true; //已登入标志
+							own.register = false; //关闭注册抽屉
+							own.currentUserBinding(response.data.data); //绑定值到展示对象
+						} else { //注册失败
+							own.errorTips(response.data.message); //失败弹框
+						}
+					})
+					.catch(function(error) {
+						console.log(error);
+					})
+			},
+			currentUserBinding(user) {
+				//导航栏用户信息展示
+				this.showUserName = user.userNickname.substring(0, 5) + '...';
+
+				//修改信息的抽屉
+				this.currentUser.userAccountNumber = user.userAccountNumber;
+				this.currentUser.userNickname = user.userNickname;
+				this.currentUser.userState = '正常';
+				this.currentUser.userCreateTime = user.userCreateTime;
+				this.currentUser.userHeadPortrait = this.url + user.userHeadPortrait;
+
+				//修改
+				this.upd.userHeadPortrait = user.userHeadPortrait;
+				this.upd.userNickname = user.userNickname;
+				this.upd.userAccountNumber = user.userAccountNumber;
+				this.upd.userPassword = user.userPassword;
+				this.upd.userPassword2 = user.userPassword;
+
+			},
+			loginValidator() { //登入验证
+				const own = this;
+				//用户名验证
+				if (/^[0-9a-zA-z]{6,16}$/.test(this.loginUser.userName) === false) {
+					this.errorTips('登入账号验证失败！请输入6-16位数字或字母！');
+					return false;
+				}
+				//用户密码验证
+				if (/^[0-9a-zA-z. ]{6,16}$/.test(this.loginUser.userPassword) === false) {
+					this.errorTips('登入密码验证失败!请6-16位数字、字母或空格及英文句号!');
+					return false;
+				}
+
+				let user = JSON.stringify({
+					userAccountNumber: own.loginUser.userName,
+					userPassword: own.loginUser.userPassword
+				});
+
+				//后台数据库验证
+				axios.post(own.url + '/user/login', user, {
+						headers: {
+							"Content-Type": "application/json;charset=utf-8"
+						}
+					})
+					.then(function(response) {
+						//验证失败
+						if (response.data.code == 1203) {
+							own.errorTips(response.data.message);
+						} else { //验证成功
+							own.successTips(response.data.message); //弹框
+							own.showUserName = response.data.data.userNickname.substring(0, 5) + '...'; //用户名显示
+							own.login = false; //关闭右侧抽屉
+							own.already_login = true; //已登入标志
+							own.currentUserBinding(response.data.data); //绑定值到展示对象
+						}
+
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+			},
+			errorTips(message) { //失败是消息提示
+				this.$Notice.error({
+					title: '温馨提示',
+					desc: message
+				});
+			},
+			successTips(message) { //成功时消息提示
+				this.$Notice.success({
+					title: '温馨提示',
+					desc: message
+				});
+			},
+			judge() { //注册or登入
+				if (this.already_login === false) {
+					//打开登入页面
+					this.login = true;
+				} else {
+					//如果已经登入，打开信息修改页面
+					this.informationDisplay = true;
+				}
+			},
+			Logout() { //注销登入
+				const own = this;
+				axios.get(own.url + '/user/logout')
+					.then(function(response) {
+						own.successTips(response.data.message); //弹框提示
+						own.informationDisplay = false; //关闭当前用户信息展示抽屉
+						//清空数据
+						own.userClear();
+					})
+					.catch(function(error) {
+						console.log(error);
+					})
+
+			},
+			userClear() { //用户信息清除
+				//当前用户昵称清空
+				this.showUserName = '请登入...';
+				//登入的信息清空
+				this.loginUser.userName = '';
+				this.loginUser.userPassword = '';
+				//注册时的信息清空
+				this.reg.userAccountNumber = '';
+				this.reg.userPassword = '';
+				this.reg.userPassword2 = '';
+				this.reg.userNickname = '';
+				//当前用户信息清空
+				this.currentUser.userAccountNumber = '';
+				this.currentUser.userNickname = '';
+				this.currentUser.userState = '';
+				this.currentUser.userCreateTime = '';
+				this.currentUser.userHeadPortrait = '';
+				this.already_login = false;
+			}
+		},
+		components: {
+			mainHtml
+		},
+		created() {
+			const own = this;
+			//加载时路由跳转
+			this.$router.push({
+				path: '/main'
+			});
+
+			//查看是否有登入用户，如果有，则显示名称
+			axios.get(own.url + '/currentUser')
+				.then(function(response) {
+					//有用户登入记录
+					if (response.data.code == 1224) {
+						own.showUserName = response.data.data.userNickname.substring(0, 5) + '...';
+						own.userName = response.data.data.userAccountNumber;
+						own.userPassword = response.data.data.userPassword;
+						own.already_login = true; //已登入标志
+						own.currentUserBinding(response.data.data); //绑定值到展示对象
+					}
+				})
+				.catch(function(error) {
+					console.log(error);
+				})
 		}
 	}
 </script>
