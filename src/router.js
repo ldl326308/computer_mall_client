@@ -8,7 +8,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/index',
+      path: '/',
       name: 'index',
       component: () => import('./components/index.vue')
     },
@@ -16,6 +16,11 @@ export default new Router({
       path: '/main',
       name: 'main',
       component: () => import('./components/main.vue')
+    },
+    {
+      path: '/info', 
+      name: 'info',
+      component: () => import('./components/computer-info.vue')
     }
   ]
 })

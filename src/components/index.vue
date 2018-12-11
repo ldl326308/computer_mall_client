@@ -29,7 +29,7 @@
 			</Header>
 			<Content :style="{margin: '0px 20px 0', background: '#fff', minHeight: '500px'}">
 				<!-- 主体内容 -->
-				<router-view></router-view>
+				<mainHtml @notLoggedIn='tipsLogin'></mainHtml>
 			</Content>
 
 			<!-- 底部 -->
@@ -52,14 +52,14 @@
 					<Col span="14">
 					<Form inline>
 						<FormItem prop="user">
-							<Poptip trigger="hover" placement="bottom" title="温馨提示" content="只允许输入6-12位数字或字母">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="只允许输入6-12位数字或字母">
 								<Input style='width:180px;line-height: 26px;' type="text" v-model="loginUser.userName" placeholder="请输入账号">
 								<Icon type="ios-person-outline" slot="prepend"></Icon>
 								</Input>
 							</Poptip>
 						</FormItem>
 						<FormItem prop="password">
-							<Poptip trigger="hover" placement="bottom" title="温馨提示" content="只允许输入6-12位数字、字母或空格及英文句号">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="只允许输入6-12位数字、字母或空格及英文句号">
 								<Input style='width:180px;line-height: 26px;' type="password" v-model="loginUser.userPassword" placeholder="请输入密码">
 								<Icon type="ios-lock-outline" slot="prepend"></Icon>
 								</Input>
@@ -95,16 +95,24 @@
 					<Col span='15' style="">
 					<Form :label-width="70">
 						<FormItem label="昵称:">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="请输入1-10位文字、字母或数字!">
 							<Input type="text" v-model="reg.userNickname"></Input>
+							</Poptip>
 						</FormItem>
 						<FormItem label="账号:">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="请输入6-16位数字或字母！">
 							<Input type="text" v-model="reg.userAccountNumber"></Input>
+							</Poptip>
 						</FormItem>
 						<FormItem label="密码:">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="请6-16位数字、字母或空格及英文句号!">
 							<Input type="password" v-model="reg.userPassword"></Input>
+							</Poptip>
 						</FormItem>
 						<FormItem label="确认密码:">
+							<Poptip trigger="hover" placement="top" title="温馨提示" content="请6-16位数字、字母或空格及英文句号!">
 							<Input type="password" v-model="reg.userPassword2"></Input>
+							</Poptip>
 						</FormItem>
 						<FormItem>
 							<Button style='margin-left:25px;' type="primary" @click="handleSubmit">注册</Button>
@@ -239,12 +247,10 @@
 
 			};
 		},
-		watch: {
-			upd: function(res) {
-				console.log(this.upd.userPassword);
-			}
-		},
 		methods: {
+			tipsLogin() {
+				this.login = true;
+			},
 			uploadSuccess(res, file) { //上传图片成功事件
 				if (res.code === 1224) { //上传成功
 					this.successTips(res.message);
@@ -471,10 +477,6 @@
 		},
 		created() {
 			const own = this;
-			//加载时路由跳转
-			this.$router.push({
-				path: '/main'
-			});
 
 			//查看是否有登入用户，如果有，则显示名称
 			axios.get(own.url + '/currentUser')
