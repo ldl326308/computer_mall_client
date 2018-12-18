@@ -21,6 +21,21 @@ export default new Router({
       path: '/info', 
       name: 'info',
       component: () => import('./components/computer-info.vue')
+    },
+    {
+      path: '/shopping/cart', 
+      name: 'cart',
+      component: () => import('./components/shopping-cart.vue')
+    },
+    {
+      path: '/infomation', 
+      name: 'infomation',
+      component: () => import('./components/information-validation.vue')
+    },
+    {
+      path: '/order/show', 
+      name: 'order',
+      component: () => import('./components/show-order.vue')
     }
   ]
 })

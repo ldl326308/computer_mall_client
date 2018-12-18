@@ -17,12 +17,16 @@
 						</MenuItem>
 
 						<MenuItem name="2">
-						<Icon type="ios-cart" />
-						我的购物车
+						<span @click="lookShoppingCart" type="primary">
+							<Icon type="ios-cart" />
+							我的购物车
+						</span>
 						</MenuItem>
 						<MenuItem name="3">
-						<Icon type="md-paper" />
-						我的订单
+						<span @click="lookOrder">
+							<Icon type="md-paper" />
+							我的订单
+						</span>
 						</MenuItem>
 					</div>
 				</Menu>
@@ -96,22 +100,22 @@
 					<Form :label-width="70">
 						<FormItem label="昵称:">
 							<Poptip trigger="hover" placement="top" title="温馨提示" content="请输入1-10位文字、字母或数字!">
-							<Input type="text" v-model="reg.userNickname"></Input>
+								<Input type="text" v-model="reg.userNickname"></Input>
 							</Poptip>
 						</FormItem>
 						<FormItem label="账号:">
 							<Poptip trigger="hover" placement="top" title="温馨提示" content="请输入6-16位数字或字母！">
-							<Input type="text" v-model="reg.userAccountNumber"></Input>
+								<Input type="text" v-model="reg.userAccountNumber"></Input>
 							</Poptip>
 						</FormItem>
 						<FormItem label="密码:">
 							<Poptip trigger="hover" placement="top" title="温馨提示" content="请6-16位数字、字母或空格及英文句号!">
-							<Input type="password" v-model="reg.userPassword"></Input>
+								<Input type="password" v-model="reg.userPassword"></Input>
 							</Poptip>
 						</FormItem>
 						<FormItem label="确认密码:">
 							<Poptip trigger="hover" placement="top" title="温馨提示" content="请6-16位数字、字母或空格及英文句号!">
-							<Input type="password" v-model="reg.userPassword2"></Input>
+								<Input type="password" v-model="reg.userPassword2"></Input>
 							</Poptip>
 						</FormItem>
 						<FormItem>
@@ -248,6 +252,12 @@
 			};
 		},
 		methods: {
+			lookOrder() {
+				window.open('http://localhost:8080/order/show', '_blank');
+			},
+			lookShoppingCart() {
+				window.open('http://localhost:8080/shopping/cart', '_blank');
+			},
 			tipsLogin() {
 				this.login = true;
 			},

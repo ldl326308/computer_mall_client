@@ -139,8 +139,7 @@
 			</Col>
 		</Row>
 
-		<Row style='margin-top:20px;'>
-			<Col span="10">&emsp;</Col>
+		<Row style='margin-top:20px;float:right'>
 			<Col>
 			<Page :total="page.total" show-total :page-size='page.size' @on-change='pageSelect($event)' />
 			</Col>
@@ -204,7 +203,7 @@
 							own.$emit('notLoggedIn');
 
 						} else { //操作成功
-							own.$Notice.info({
+							own.$Notice.success({
 								title: '温馨提示',
 								desc: response.data.message
 							});
