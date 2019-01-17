@@ -3,11 +3,9 @@
 		<Layout>
 			<Header :style="{width: '100%'}">
 				<Menu mode="horizontal" theme="dark">
-					<router-link :to="{ name: 'main'}">
-						<div class="layout-logo" style='font-size:16px;color:white;line-height:30px;font-family: 华文琥珀;'>
-							&nbsp;LC电脑商城
-						</div>
-					</router-link>
+					<div class="layout-logo" style='font-size:16px;color:white;line-height:30px;font-family: 华文琥珀;'>
+						&nbsp;LC电脑商城
+					</div>
 					<div class="layout-nav">
 						<MenuItem name="1" :title='currentUser.userNickname'>
 						<span @click="judge" type="primary">
@@ -253,10 +251,26 @@
 		},
 		methods: {
 			lookOrder() {
-				window.open('http://localhost:8080/order/show', '_blank');
+				if (this.currentUser.userAccountNumber === '') {
+					this.$Notice.info({
+						title: '温馨提示',
+						desc: '请先登入才能查看订单哦！'
+					});
+					this.login = true;
+				} else {
+					window.open('http://localhost:8080/order/show', '_blank');
+				}
 			},
 			lookShoppingCart() {
-				window.open('http://localhost:8080/shopping/cart', '_blank');
+				if (this.currentUser.userAccountNumber === '') {
+					this.$Notice.info({
+						title: '温馨提示',
+						desc: '请先登入才能查看购物车哦！'
+					});
+					this.login = true;
+				} else {
+					window.open('http://localhost:8080/shopping/cart', '_blank');
+				}
 			},
 			tipsLogin() {
 				this.login = true;

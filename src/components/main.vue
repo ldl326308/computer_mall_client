@@ -141,7 +141,7 @@
 
 		<Row style='margin-top:20px;float:right'>
 			<Col>
-			<Page :total="page.total" show-total :page-size='page.size' @on-change='pageSelect($event)' />
+			<Page :total="page.total + 1" show-total :page-size='page.size' @on-change='pageSelect($event)' />
 			</Col>
 		</Row>
 

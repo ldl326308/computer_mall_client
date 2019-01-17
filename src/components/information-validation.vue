@@ -151,9 +151,9 @@
 							}
 						})
 						.then(function(response) {
-							console.log(response);
 							if (response.data.code === 1028) {
 								window.open('http://localhost:8080/order/show', '_blank');
+								window.close();
 							} else {
 								this.$Notice.error({
 									title: '温馨提示',

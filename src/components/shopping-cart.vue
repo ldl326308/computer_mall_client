@@ -140,6 +140,8 @@
 						desc: '没有选中你要结算的商品哦！'
 					});
 				} else {
+					//关闭当前页面
+					window.close();
 					//打开信息确认页面
 					window.open('http://localhost:8080/infomation?ids=' + data, '_blank');
 				}
